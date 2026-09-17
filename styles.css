@@ -403,28 +403,11 @@ html, body {
 .more { border: 0; background: transparent; cursor: pointer; font-size: 16px; }
 
 .comparison-wrap { padding: 0 10px; }
-
-/* ======================================================
-   COMPARADOR DE CARTILLAS (FORMA CUADRADA 1:1 FIJA)
-====================================================== */
-
+/* Reemplace el bloque del comparador en styles.css */
 .comparison {
   --split: 50%;
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5; /* Formato vertical estándar de Instagram: no recorta nada */
-  border-radius: 16px;
-  overflow: hidden;
-  background: #dfe4eb;
-  user-select: none;
-  touch-action: none;
-  cursor: ew-resize;
-}
-.comparison {
-  --split: 50%;
-  position: relative;
-  width: 100%;
-  /* Sin aspect-ratio fijo: la altura la define la propia imagen */
   border-radius: 16px;
   overflow: hidden;
   background: #dfe4eb;
@@ -433,15 +416,16 @@ html, body {
   cursor: ew-resize;
 }
 
-/* La imagen "Antes" fluye natural y le da el alto exacto a la caja */
+/* La imagen Antes fluye y dicta el alto real sin recortar nada */
 .before-media {
   display: block;
   width: 100%;
   height: auto;
   pointer-events: none;
+  vertical-align: middle;
 }
 
-/* El recorte del "Después" cubre exactamente esa misma área */
+/* El recorte y la capa Después clonan exactamente esa superficie */
 .after-clip {
   position: absolute;
   inset: 0;
@@ -457,12 +441,14 @@ html, body {
 .after-clip img,
 .after-clip .after-media {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   pointer-events: none;
 }
+
 .media-label {
   position: absolute;
   top: 12px;
