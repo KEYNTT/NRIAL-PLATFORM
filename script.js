@@ -1,10 +1,9 @@
 // ======================================================
-// CONFIGURACIÓN Y FUENTE DE DATOS (CLOUDFLARE R2)
+// CONFIGURACIÓN Y API (CLOUDFLARE WORKER)
 // ======================================================
-const R2_BASE_URL = "https://media.nrial.com";
-const MANIFEST_URL = `${R2_BASE_URL}/manifest.json`;
+// Usamos el Worker directamente para obtener datos en vivo sin caché congelada de CDN
+const API_POSTS_URL = "https://nrial-media-api.kevin-123-abanto.workers.dev/api/posts";
 
-// Almacén reactivo de publicaciones (se llena vía fetch desde R2)
 let postsDatabase = [];
 let displayedCount = 0;
 const BATCH_SIZE = 6;
@@ -22,10 +21,8 @@ function isVideoUrl(url) {
 }
 
 // ======================================================
-// OBSERVADORES: CARGA POR RANGO + CONTROL VISUAL (SOLO VIDEO)
+// OBSERVADORES: CONTROL DE VIDEO
 // ======================================================
-
-// 1. Conecta la URL 200px antes de entrar a pantalla y solicita solo metadatos (HTTP 206)
 const preloadObserver = new IntersectionObserver((entries, observer) => {
   entries.forEach(({ target: video, isIntersecting }) => {
     if (isIntersecting && !video.src && video.dataset.src) {
@@ -36,11 +33,10 @@ const preloadObserver = new IntersectionObserver((entries, observer) => {
   });
 }, { rootMargin: "200px 0px" });
 
-// 2. Inicia reproducción y solicitud de fragmentos al 50% de visibilidad
 const playbackObserver = new IntersectionObserver((entries) => {
   entries.forEach(({ target: video, isIntersecting }) => {
     if (isIntersecting) {
-      video.play().catch(() => {}); // Previene errores por scroll veloz
+      video.play().catch(() => {});
     } else {
       video.pause();
     }
@@ -58,17 +54,17 @@ function createCardElement(media) {
   const beforeImg = clone.querySelector(".before-media");
   beforeImg.src = media.before;
 
-  // 2. Resolver el elemento "Después" (Video o Imagen)
+  // 2. Resolver elemento "Después" (Video o Imagen)
   const afterClip = clone.querySelector(".after-clip");
   const videoEl = clone.querySelector(".after-video");
 
   if (isVideoUrl(media.after)) {
-    // Es Video: activar observadores de rango y reproducción
+    // Si es Video: observadores activos
     videoEl.dataset.src = media.after;
     preloadObserver.observe(videoEl);
     playbackObserver.observe(videoEl);
   } else {
-    // Es Imagen: eliminar el elemento video e inyectar <img>
+    // Si es Imagen (JPG, PNG, WEBP): remover video e inyectar <img> perfectamente alineado
     videoEl.remove();
 
     const imgEl = document.createElement("img");
@@ -77,18 +73,18 @@ function createCardElement(media) {
     imgEl.alt = "Después";
     imgEl.loading = "lazy";
     imgEl.draggable = false;
-    imgEl.style.cssText = "width: 100%; height: 100%; object-fit: cover; display: block;";
+    imgEl.style.cssText = "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none;";
 
     afterClip.appendChild(imgEl);
   }
 
-  // 3. Inicializar comparador interactivo
-  setupComparator(clone.querySelector("[data-comparison]"));
+  // 3. Inicializar comparador
+  setupComparator(card.querySelector("[data-comparison]"));
   return card;
 }
 
 // ======================================================
-// RENDERIZADO EN LOTES (GRID RESPONSIVE 2x3)
+// RENDERIZADO EN LOTES (2x3)
 // ======================================================
 function renderNextBatch() {
   const nextItems = postsDatabase.slice(displayedCount, displayedCount + BATCH_SIZE);
@@ -134,33 +130,18 @@ function setupComparator(container) {
 // ARRANQUE
 // ======================================================
 document.addEventListener("DOMContentLoaded", async () => {
-  // Inicializar slider del hero si existe
   setupComparator(document.querySelector(".comparator-16-9"));
 
-  // Descargar catálogo dinámico de R2
   try {
-    const res = await fetch(MANIFEST_URL);
+    // Consulta directa a la API en vivo con parámetro de tiempo anti-caché
+    const res = await fetch(`${API_POSTS_URL}?t=${Date.now()}`);
     if (res.ok) {
       postsDatabase = await res.json();
     }
   } catch (err) {
-    console.warn("No se pudo conectar con el catálogo de R2:", err);
+    console.warn("No se pudo obtener el catálogo desde el Worker:", err);
   }
 
-  // Renderizar el primer lote
   renderNextBatch();
-
-  // Control del botón "Ver más..."
   loadMoreBtn?.addEventListener("click", renderNextBatch);
 });
-
-// En script.js, dentro de DOMContentLoaded:
-try {
-  // El parámetro ?t= fuerza a traer siempre la versión recién subida
-  const res = await fetch(`${MANIFEST_URL}?t=${Date.now()}`);
-  if (res.ok) {
-    postsDatabase = await res.json();
-  }
-} catch (err) {
-  console.warn("No se pudo conectar con el catálogo de R2:", err);
-}
