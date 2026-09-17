@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NRIAL - Dashboard de Medios</title>
+  <style>
+    :root { --bg: #0d0e12; --card: #171922; --accent: #ff3040; --text: #f0f0f5; }
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 2rem; max-width: 800px; margin: auto; }
+    .card { background: var(--card); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid #282a36; }
+    label { display: block; margin-top: 1rem; font-weight: 600; font-size: 0.9rem; }
+    input[type="file"], input[type="password"] { width: 100%; margin-top: 0.4rem; padding: 0.7rem; background: #0b0c10; border: 1px solid #333; border-radius: 8px; color: #fff; box-sizing: border-box; }
+    button { margin-top: 1.5rem; background: var(--accent); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; }
+    .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+    .post-item { background: #0b0c10; border-radius: 8px; padding: 0.75rem; text-align: center; }
+    .post-item img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 6px; }
+    .btn-delete { background: #4a151b; color: #ff6b6b; padding: 0.5rem; border: 1px solid #702028; margin-top: 0.5rem; width: 100%; border-radius: 6px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Panel de Control NRIAL</h1>
+
+  <section class="card">
+    <h2>Subir nuevo par (Antes / Después)</h2>
+    <label>Clave secreta:</label>
+    <input type="password" id="secretKey" placeholder="Ingrese su contraseña" />
+
+    <label>Imagen "Antes" (.webp / .jpg / .png):</label>
+    <input type="file" id="beforeFile" accept="image/*" />
+
+    <label>Video "Después" (.webm / .mp4):</label>
+    <input type="file" id="afterFile" accept="video/webm,video/mp4" />
+
+    <button id="uploadBtn" type="button">Subir a Cloudflare R2</button>
+  </section>
+
+  <section class="card">
+    <h2>Publicaciones en R2</h2>
+    <div id="postsList" class="posts-grid">Cargando publicaciones...</div>
+  </section>
+
+  <script>
+    const API_URL = "https://nrial-media-api.kevin-123-abanto.workers.dev/api";
+
+    async function loadPosts() {
+      const container = document.getElementById("postsList");
+      try {
+        const res = await fetch(`${API_URL}/posts`);
+        const posts = await res.json();
+        if (posts.length === 0) {
+          container.innerHTML = "<p>No hay publicaciones aún en el bucket.</p>";
+          return;
+        }
+        container.innerHTML = posts.map(p => `
+          <div class="post-item">
+            <img src="${p.before}" alt="Antes" />
+            <button class="btn-delete" onclick="deletePost(${p.id})">Eliminar</button>
+          </div>
+        `).join("");
+      } catch (err) {
+        container.innerHTML = "<p>Error al cargar publicaciones.</p>";
+      }
+    }
+
+    document.getElementById("uploadBtn").addEventListener("click", async () => {
+      const secret = document.getElementById("secretKey").value;
+      const before = document.getElementById("beforeFile").files[0];
+      const after = document.getElementById("afterFile").files[0];
+
+      if (!secret || !before || !after) return alert("Complete la clave y seleccione ambos archivos.");
+
+      const formData = new FormData();
+      formData.append("before", before);
+      formData.append("after", after);
+
+      const btn = document.getElementById("uploadBtn");
+      btn.textContent = "Subiendo archivos a R2...";
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`${API_URL}/upload`, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${secret}` },
+          body: formData
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error || "Fallo en la subida");
+        }
+
+        alert("¡Subida completada con éxito!");
+        document.getElementById("beforeFile").value = "";
+        document.getElementById("afterFile").value = "";
+        loadPosts();
+      } catch (err) {
+        alert("Error: " + err.message);
+      } finally {
+        btn.textContent = "Subir a Cloudflare R2";
+        btn.disabled = false;
+      }
+    });
+
+    async function deletePost(id) {
+      const secret = document.getElementById("secretKey").value;
+      if (!secret) return alert("Ingrese su contraseña en el campo de arriba para autorizar la eliminación.");
+      if (!confirm("¿Seguro que desea eliminar este par de archivos de R2?")) return;
+
+      await fetch(`${API_URL}/posts/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${secret}` }
+      });
+      loadPosts();
+    }
+
+    loadPosts();
+  </script>
+</body>
+</html>
