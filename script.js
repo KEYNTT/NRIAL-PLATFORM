@@ -153,3 +153,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Control del botón "Ver más..."
   loadMoreBtn?.addEventListener("click", renderNextBatch);
 });
+
+// En script.js, dentro de DOMContentLoaded:
+try {
+  // El parámetro ?t= fuerza a traer siempre la versión recién subida
+  const res = await fetch(`${MANIFEST_URL}?t=${Date.now()}`);
+  if (res.ok) {
+    postsDatabase = await res.json();
+  }
+} catch (err) {
+  console.warn("No se pudo conectar con el catálogo de R2:", err);
+}
