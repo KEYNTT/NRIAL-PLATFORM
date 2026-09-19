@@ -1,19 +1,16 @@
 <!doctype html>
 <html lang="es">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NRIAL PLATFORM</title>
-
-  <!-- Tipografía Inter -->
+  
+  <!-- Tipografía Inter y acentos de diseño -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
 
   <!-- =========================================
@@ -21,32 +18,42 @@
   ========================================== -->
   <header class="navbar">
     <div class="nav-container">
-      <div class="brand">NRIAL PLATFORM</div>
+      <a href="index.html" class="brand">
+        <span class="brand-glow">NR</span>IAL PLATFORM
+      </a>
       <a href="#contacto" class="btn-nav">QUIERO CONTENIDO</a>
     </div>
   </header>
 
-
   <!-- =========================================
-       1. SECCIÓN INICIO (HERO HORIZONTAL 16:9)
+       1. HERO HORIZONTAL 16:9 CON COLOR Y DETALLES
   ========================================== -->
   <section class="hero-wrapper">
     <div class="hero-grid">
-
+      
+      <!-- Columna Izquierda: Copy Principal -->
       <div class="hero-left">
+        <div class="hero-pill-badge">
+          <span class="pill-dot"></span>
+          <span>Edición de alta retención para creadores</span>
+        </div>
         <h1 class="hero-title">
-          Crea diseños personales para todas tus redes sociales trabajamos de la mejor manera para que tengas un perfil nice.
+          Crea diseños personales para todas tus redes sociales trabajamos de la mejor manera para que tengas un perfil <span class="highlight-gradient">nice</span>.
         </h1>
-
         <div class="hero-action">
-          <a href="#comenzar" class="btn-start">Comenzar</a>
+          <a href="#galeria" class="btn-start">Comenzar</a>
         </div>
       </div>
 
+      <!-- Columna Derecha: Tarjeta 16:9 enriquecida -->
       <div class="hero-right">
-        <div class="card-horizontal">
+        <!-- Resplandor dinámico de fondo (Halo cromático) -->
+        <div class="hero-ambient-glow"></div>
 
+        <div class="card-horizontal">
+          <!-- Lateral ANTES -->
           <div class="panel-side side-before">
+            <span class="panel-chip chip-before">RAW</span>
             <h2 class="panel-title">ANTES</h2>
             <span class="panel-subtitle">Material base</span>
             <ul class="panel-list">
@@ -57,33 +64,42 @@
             </ul>
           </div>
 
-          <!-- Comparador horizontal del Hero -->
-          <div class="comparator-16-9" data-comparison>
-            <img
-              class="media-layer"
-              src="assets/videoantes.webp"
-              alt="Antes"
-              draggable="false"
-            />
+          <!-- Comparador 16:9 con badges de detalle -->
+          <div class="comparator-outer">
+            <div class="badge-cinema badge-top-left">4K • 60 FPS</div>
+            <div class="badge-cinema badge-top-right">CINEMA GRADING</div>
 
-            <div class="media-clip">
+            <div class="comparator-16-9" data-comparison>
               <img
                 class="media-layer"
-                src="assets/videodespues.webp"
-                alt="Después"
+                src="assets/videoantes.webp"
+                alt="Antes"
                 draggable="false"
               />
+              <div class="media-clip">
+                <img
+                  class="media-layer"
+                  src="assets/videodespues.webp"
+                  alt="Después"
+                  draggable="false"
+                />
+              </div>
+              <div class="slider-line"></div>
+              <div class="slider-handle">
+                <span>‹</span><span>›</span>
+              </div>
             </div>
 
-            <div class="slider-line"></div>
-            <div class="slider-handle">
-              <span>‹</span><span>›</span>
+            <div class="slider-hint">
+              <span>↔ Arrastra para comparar en vivo</span>
             </div>
           </div>
 
+          <!-- Lateral DESPUÉS -->
           <div class="panel-side side-after">
+            <span class="panel-chip chip-after">OPTIMIZADO</span>
             <h2 class="panel-title">DESPUÉS</h2>
-            <span class="panel-subtitle">Optimizado</span>
+            <span class="panel-subtitle">Resultado final</span>
             <ul class="panel-list">
               <li><span class="bullet-check">✓</span> Gancho visual</li>
               <li><span class="bullet-check">✓</span> Mensaje claro</li>
@@ -91,46 +107,122 @@
               <li><span class="bullet-check">✓</span> Diseñado para vender</li>
             </ul>
           </div>
-
         </div>
       </div>
 
     </div>
   </section>
 
-
   <!-- =========================================
-       2. SECCIÓN GALERÍA (GRID 2x3 + VER MÁS)
+       2. SECCIÓN GALERÍA (MÁXIMO 6 CARTILLAS COMPACTAS)
   ========================================== -->
-  <section class="gallery-section">
+  <section class="gallery-section" id="galeria">
     <div class="gallery-container">
-
-      <!-- Cuadrícula 2x3 donde se inyectan las publicaciones -->
+      <!-- Cuadrícula donde JS inyecta exactamente 6 tarjetas -->
       <div class="cards-grid" id="cards-grid"></div>
 
-      <!-- Botón Ver Más -->
+      <!-- Botón que redirige al HTML del catálogo completo -->
       <div class="load-more-wrap">
-        <button id="load-more-btn" class="btn-load-more" type="button">
+        <a href="galeria.html" id="load-more-btn" class="btn-load-more">
           Ver más...
-        </button>
+        </a>
       </div>
-
     </div>
   </section>
 
-<!-- =========================================
-       PLANTILLA REUTILIZABLE (TEXTOS 100% ESTÁTICOS)
+  <!-- =========================================
+       3. BANNER PRE-FOOTER (CONVERSIÓN)
+  ========================================== -->
+  <section class="cta-banner" id="contacto">
+    <div class="cta-inner">
+      <h2>Transformemos tu presencia digital</h2>
+      <p>Material crudo convertido en piezas con retención y personalidad visual de élite.</p>
+      <a href="https://wa.me/" target="_blank" rel="noopener" class="btn-cta-main">
+        Iniciar Proyecto
+      </a>
+    </div>
+  </section>
+
+  <!-- =========================================
+        PIE DE PÁGINA TOTALMENTE EN NEGRO (#000000)
+    ========================================== -->
+    <footer class="footer-creative">
+      <div class="footer-container">
+        <div class="footer-top">
+          <!-- Manifiesto -->
+          <div class="footer-col brand-col">
+            <div class="footer-brand">NRIAL PLATFORM<span class="brand-dot">.</span></div>
+            <p class="footer-manifesto">
+              Ayudamos a fundadores, creadores y marcas que entienden que en la era del scroll infinito, pasar desapercibido es el error más costoso.
+            </p>
+            <div class="system-status">
+              <span class="status-indicator"></span>
+              <span class="status-text">Cloudflare R2 Bucket: Conectado</span>
+            </div>
+          </div>
+
+          <!-- Enlaces -->
+          <div class="footer-col">
+            <h4 class="col-title">Explorar</h4>
+            <ul class="col-links">
+              <li><a href="index.html">Inicio</a></li>
+              <li><a href="galeria.html">Catálogo Completo</a></li>
+              <li><a href="admin.html">Panel de Creador (Admin)</a></li>
+            </ul>
+          </div>
+
+          <!-- Formatos -->
+          <div class="footer-col">
+            <h4 class="col-title">Formatos</h4>
+            <ul class="col-links">
+              <li><span>Short-Form Vertical (9:16)</span></li>
+              <li><span>Cortes Horizontales (16:9)</span></li>
+              <li><span>Diseño de Sonido Frecuencial</span></li>
+            </ul>
+          </div>
+
+          <!-- Disponibilidad -->
+          <div class="footer-col">
+            <h4 class="col-title">Disponibilidad</h4>
+            <div class="studio-clock">
+              <span>⚡ Cupos activos para nuevos proyectos</span>
+            </div>
+            <div class="social-pills">
+              <a href="https://instagram.com" target="_blank" rel="noopener" class="social-pill">Instagram</a>
+              <a href="https://tiktok.com" target="_blank" rel="noopener" class="social-pill">TikTok</a>
+              <a href="https://youtube.com" target="_blank" rel="noopener" class="social-pill">YouTube</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de copyright -->
+        <div class="footer-bottom">
+          <div class="copyright">
+            © 2026 <strong>NRIAL Platforms Inc.</strong> Todos los derechos reservados.
+          </div>
+          <div class="signature">
+            Crafted with obsession for high retention & aesthetics.
+          </div>
+        </div>
+      </div>
+
+      <!-- IMAGEN NRIAL DEBAJO DEL PIE DE PÁGINA (100% ANCHO) -->
+      <div class="footer-image-strip">
+        <img src="nrial.png" alt="NRIAL" class="nrial-bottom-img" />
+      </div>
+    </footer>
+
+  <!-- =========================================
+       PLANTILLA DE CARTILLA: EXACTA AL ORIGINAL
   ========================================== -->
   <template id="card-template">
     <article class="ig-card">
-
       <!-- HEADER FIJO -->
       <header class="post-header">
         <div class="profile">
           <div class="story-ring">
             <div class="avatar"><span>NR</span></div>
           </div>
-
           <div class="profile-meta">
             <div class="username-row">
               <strong>nrial.platforms</strong>
@@ -139,29 +231,23 @@
             <span class="location">Miami, USA</span>
           </div>
         </div>
-
         <button class="more" type="button" aria-label="Más opciones">•••</button>
       </header>
-
       <!-- COMPARADOR (SOLO CAMBIAN LAS RUTAS) -->
       <div class="comparison-wrap">
         <div class="comparison" data-comparison>
           <img class="before-media" alt="Antes" draggable="false" loading="lazy" />
-
           <div class="after-clip">
             <video class="after-video" muted loop playsinline preload="none"></video>
           </div>
-
           <span class="media-label before-label">Antes</span>
           <span class="media-label after-label">Después</span>
-
           <div class="slider-line"></div>
           <div class="slider-handle">
             <span>‹</span><span>›</span>
           </div>
         </div>
       </div>
-
       <!-- ACCIONES FIJAS -->
       <div class="post-actions">
         <div class="left-actions">
@@ -171,14 +257,12 @@
             </svg>
             <span>12.8K</span>
           </div>
-
           <div class="action-item">
             <svg aria-label="Comentar" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
             </svg>
             <span>186</span>
           </div>
-
           <div class="action-item">
             <svg aria-label="Repost" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="17 1 21 5 17 9"></polyline>
@@ -188,7 +272,6 @@
             </svg>
             <span>75</span>
           </div>
-
           <div class="action-item">
             <svg aria-label="Compartir" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -197,14 +280,12 @@
             <span>6</span>
           </div>
         </div>
-
         <div class="action-item save-action">
           <svg aria-label="Guardar" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
           </svg>
         </div>
       </div>
-
       <!-- ENGAGEMENT FIJO -->
       <div class="engagement">
         <div class="mini-avatars" aria-hidden="true">
@@ -212,25 +293,22 @@
         </div>
         <strong>12,847 Me gusta</strong>
       </div>
-
       <!-- DESCRIPCIÓN FIJA -->
       <div class="caption">
         <strong>nrial.platforms</strong>
         <span>Transformación visual real. Del estático al movimiento. 🔥</span>
         <div class="hashtags">#Visuales #AntesYDespues #Nrial</div>
       </div>
-
       <!-- FOOTER FIJO -->
       <footer class="post-footer">
         <button class="comments-link" type="button">Ver los 186 comentarios</button>
         <span class="dot">•</span>
         <span>Hace 2 días</span>
       </footer>
-
     </article>
   </template>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>

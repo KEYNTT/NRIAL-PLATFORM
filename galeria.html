@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catálogo Completo — NRIAL PLATFORM</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .catalog-header {
+      max-width: 1040px;
+      margin: 40px auto 25px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .catalog-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .btn-return {
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 9px 22px;
+      border-radius: 999px;
+      border: 1.5px solid var(--text-main);
+      color: var(--text-main);
+      background: #fff;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-return:hover {
+      background: var(--text-main);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================
+       BARRA DE NAVEGACIÓN
+  ========================================== -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        <span class="brand-accent">NR</span>IAL<span class="brand-dot">.</span>
+      </a>
+      <a href="index.html" class="btn-return">← Volver al Inicio</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="catalog-header">
+      <div>
+        <h1 class="catalog-title">Catálogo Completo de Proyectos</h1>
+        <span style="font-size: 13px; color: var(--text-muted);" id="catalog-counter">Cargando publicaciones...</span>
+      </div>
+    </div>
+
+    <!-- Contenedor General de Cuadrículas -->
+    <section class="gallery-section">
+      <div class="gallery-container">
+        <div class="cards-grid" id="full-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================
+       PIE DE PÁGINA CREATIVO Y EDITORIAL
+  ========================================== -->
+  <footer class="footer-creative">
+    <div class="footer-giant-text" aria-hidden="true">
+      NRIAL PLATFORMS • VISUAL EXCELLENCE • ZERO MEDIOCRITY • 
+    </div>
+
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-col brand-col">
+          <div class="footer-brand">NRIAL PLATFORM<span class="brand-dot">.</span></div>
+          <p class="footer-manifesto">
+            Ayudamos a fundadores, creadores y marcas que entienden que en la era del scroll infinito, pasar desapercibido es el error más costoso.
+          </p>
+          <div class="system-status">
+            <span class="status-indicator"></span>
+            <span class="status-text">Cloudflare R2 Bucket: Conectado</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="col-title">Explorar</h4>
+          <ul class="col-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="galeria.html">Catálogo Completo</a></li>
+            <li><a href="admin.html">Panel de Creador (Admin)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="col-title">Formatos</h4>
+          <ul class="col-links">
+            <li><span>Short-Form Vertical (9:16)</span></li>
+            <li><span>Cortes Horizontales (16:9)</span></li>
+            <li><span>Diseño de Sonido Frecuencial</span></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="col-title">Disponibilidad</h4>
+          <div class="studio-clock">
+            <span>⚡ Cupos activos para nuevos proyectos</span>
+          </div>
+          <div class="social-pills">
+            <a href="https://instagram.com" target="_blank" rel="noopener" class="social-pill">Instagram</a>
+            <a href="https://tiktok.com" target="_blank" rel="noopener" class="social-pill">TikTok</a>
+            <a href="https://youtube.com" target="_blank" rel="noopener" class="social-pill">YouTube</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="copyright">
+          © 2026 <strong>NRIAL Platforms Inc.</strong> Todos los derechos reservados.
+        </div>
+        <div class="signature">
+          Crafted with obsession for high retention & aesthetics.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =======================================================
+       PLANTILLA DE CARTILLA: 100% IDÉNTICA AL ORIGINAL
+  ======================================================== -->
+  <template id="card-template">
+    <article class="ig-card">
+      <header class="post-header">
+        <div class="profile">
+          <div class="story-ring">
+            <div class="avatar"><span>NR</span></div>
+          </div>
+          <div class="profile-meta">
+            <div class="username-row">
+              <strong>nrial.platforms</strong>
+              <span class="verified" aria-label="verificado">✓</span>
+            </div>
+            <span class="location">Miami, USA</span>
+          </div>
+        </div>
+        <button class="more" type="button" aria-label="Más opciones">•••</button>
+      </header>
+      <div class="comparison-wrap">
+        <div class="comparison" data-comparison>
+          <img class="before-media" alt="Antes" draggable="false" loading="lazy" />
+          <div class="after-clip">
+            <video class="after-video" muted loop playsinline preload="none"></video>
+          </div>
+          <span class="media-label before-label">Antes</span>
+          <span class="media-label after-label">Después</span>
+          <div class="slider-line"></div>
+          <div class="slider-handle">
+            <span>‹</span><span>›</span>
+          </div>
+        </div>
+      </div>
+      <div class="post-actions">
+        <div class="left-actions">
+          <div class="action-item liked">
+            <svg aria-label="Me gusta" width="22" height="22" viewBox="0 0 24 24" fill="#ff3040">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <span>12.8K</span>
+          </div>
+          <div class="action-item">
+            <svg aria-label="Comentar" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+            <span>186</span>
+          </div>
+          <div class="action-item">
+            <svg aria-label="Repost" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="17 1 21 5 17 9"></polyline>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+              <polyline points="7 23 3 19 7 15"></polyline>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+            </svg>
+            <span>75</span>
+          </div>
+          <div class="action-item">
+            <svg aria-label="Compartir" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            <span>6</span>
+          </div>
+        </div>
+        <div class="action-item save-action">
+          <svg aria-label="Guardar" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="engagement">
+        <div class="mini-avatars" aria-hidden="true">
+          <span>AB</span><span>LM</span><span>JR</span>
+        </div>
+        <strong>12,847 Me gusta</strong>
+      </div>
+      <div class="caption">
+        <strong>nrial.platforms</strong>
+        <span>Transformación visual real. Del estático al movimiento. 🔥</span>
+        <div class="hashtags">#Visuales #AntesYDespues #Nrial</div>
+      </div>
+      <footer class="post-footer">
+        <button class="comments-link" type="button">Ver los 186 comentarios</button>
+        <span class="dot">•</span>
+        <span>Hace 2 días</span>
+      </footer>
+    </article>
+  </template>
+
+  <!-- =========================================
+       CONTROLADOR JAVASCRIPT CORREGIDO
+  ========================================== -->
+  <script>
+    const API_POSTS_URL = "https://nrial-media-api.kevin-123-abanto.workers.dev/api/posts";
+    const fullGrid = document.getElementById("full-grid");
+    const catalogCounter = document.getElementById("catalog-counter");
+    const template = document.getElementById("card-template");
+
+    // Detección estricta de extensiones de video
+    function isVideoUrl(url) {
+      return /\.(webm|mp4|mov|ogg)(\?.*)?$/i.test(url);
+    }
+
+    // 1. Observador de precarga: carga el src solo cuando se aproxima a pantalla
+    const preloadObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(({ target: video, isIntersecting }) => {
+        if (isIntersecting && !video.src && video.dataset.src) {
+          video.src = video.dataset.src;
+          video.preload = "metadata";
+          observer.unobserve(video);
+        }
+      });
+    }, { rootMargin: "300px 0px" });
+
+    // 2. Observador de reproducción: asegura reproducción fluida en scroll
+    const playbackObserver = new IntersectionObserver((entries) => {
+      entries.forEach(({ target: video, isIntersecting }) => {
+        if (isIntersecting) {
+          // Forzar propiedades requeridas por el navegador
+          video.muted = true;
+          video.defaultMuted = true;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.4 });
+
+    // Control deslizante Antes / Después
+    function setupComparator(container) {
+      if (!container) return;
+      let resetTimer = null;
+
+      const updateSplit = (pct) => {
+        const clamped = Math.max(0, Math.min(pct, 100));
+        container.style.setProperty("--split", `${clamped}%`);
+      };
+
+      const onMove = (e) => {
+        container.classList.remove("is-resetting");
+        clearTimeout(resetTimer);
+        const rect = container.getBoundingClientRect();
+        if (rect.width > 0) {
+          const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+          updateSplit(((clientX - rect.left) / rect.width) * 100);
+        }
+      };
+
+      const onReset = () => {
+        container.classList.add("is-resetting");
+        updateSplit(50);
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => container.classList.remove("is-resetting"), 450);
+      };
+
+      // Soporte táctil y de cursor
+      container.addEventListener("pointerdown", onMove);
+      container.addEventListener("pointerenter", onMove);
+      container.addEventListener("pointermove", onMove);
+      ["pointerleave", "pointerup", "pointercancel"].forEach((evt) => {
+        container.addEventListener(evt, onReset);
+      });
+
+      updateSplit(50);
+    }
+
+    // Construcción de la cartilla
+    function buildCard(media) {
+      const clone = template.content.cloneNode(true);
+      const card = clone.querySelector(".ig-card");
+
+      // Asignar imagen Antes
+      const beforeImg = clone.querySelector(".before-media");
+      beforeImg.src = media.before;
+
+      const afterClip = clone.querySelector(".after-clip");
+      const videoEl = clone.querySelector(".after-video");
+
+      if (isVideoUrl(media.after)) {
+        // Corrección crítica: asegurar 'muted' en la propiedad IDL de JS para permitir autoplay
+        videoEl.muted = true;
+        videoEl.defaultMuted = true;
+        videoEl.playsInline = true;
+        videoEl.setAttribute("muted", "");
+        videoEl.setAttribute("playsinline", "");
+        videoEl.dataset.src = media.after;
+
+        preloadObserver.observe(videoEl);
+        playbackObserver.observe(videoEl);
+      } else {
+        // En caso de ser imagen estática
+        videoEl.remove();
+        const imgEl = document.createElement("img");
+        imgEl.className = "after-media";
+        imgEl.src = media.after;
+        imgEl.alt = "Después";
+        imgEl.draggable = false;
+        imgEl.loading = "lazy";
+        imgEl.style.cssText = "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none;";
+        afterClip.appendChild(imgEl);
+      }
+
+      setupComparator(card.querySelector("[data-comparison]"));
+      return card;
+    }
+
+    // Carga de todas las piezas desde la API
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const res = await fetch(`${API_POSTS_URL}?t=${Date.now()}`);
+        if (res.ok) {
+          const posts = await res.json();
+          catalogCounter.textContent = `${posts.length} publicaciones disponibles en alta fidelidad`;
+          
+          fullGrid.innerHTML = "";
+          posts.forEach((media) => {
+            const cardNode = buildCard(media);
+            fullGrid.appendChild(cardNode); // Montaje seguro en el DOM antes de reproducir
+          });
+        }
+      } catch (err) {
+        console.error("Error al cargar publicaciones en la galería:", err);
+        catalogCounter.textContent = "No fue posible sincronizar el bucket en vivo.";
+      }
+    });
+  </script>
+</body>
+</html>

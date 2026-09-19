@@ -1,28 +1,27 @@
-// ======================================================
-// CONFIGURACIÓN Y API (CLOUDFLARE WORKER)
-// ======================================================
-// Usamos el Worker directamente para obtener datos en vivo sin caché congelada de CDN
-const API_POSTS_URL = "https://nrial-media-api.kevin-123-abanto.workers.dev/api/posts";
+/**
+ * NRIAL PLATFORM — Controlador de Portada
+ * Inyecta un máximo estricto de 6 cartillas en la portada.
+ * Si existen más piezas, muestra el botón hacia galeria.html.
+ */
 
-let postsDatabase = [];
-let displayedCount = 0;
-const BATCH_SIZE = 6;
+const API_POSTS_URL = "https://nrial-media-api.kevin-123-abanto.workers.dev/api/posts";
+const HOMEPAGE_LIMIT = 6;
 
 // Elementos del DOM
 const cardsGrid = document.getElementById("cards-grid");
 const loadMoreBtn = document.getElementById("load-more-btn");
 const template = document.getElementById("card-template");
 
-// ======================================================
-// DETECCIÓN DE FORMATO MULTIMEDIA
-// ======================================================
+/**
+ * Valida si la URL contiene una extensión de video
+ */
 function isVideoUrl(url) {
   return /\.(webm|mp4|mov|ogg)(\?.*)?$/i.test(url);
 }
 
-// ======================================================
-// OBSERVADORES: CONTROL DE VIDEO
-// ======================================================
+/**
+ * Precarga perezosa (Lazy Preload)
+ */
 const preloadObserver = new IntersectionObserver((entries, observer) => {
   entries.forEach(({ target: video, isIntersecting }) => {
     if (isIntersecting && !video.src && video.dataset.src) {
@@ -31,8 +30,11 @@ const preloadObserver = new IntersectionObserver((entries, observer) => {
       observer.unobserve(video);
     }
   });
-}, { rootMargin: "200px 0px" });
+}, { rootMargin: "250px 0px" });
 
+/**
+ * Reproducción automática al estar en pantalla
+ */
 const playbackObserver = new IntersectionObserver((entries) => {
   entries.forEach(({ target: video, isIntersecting }) => {
     if (isIntersecting) {
@@ -43,30 +45,27 @@ const playbackObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.5 });
 
-// ======================================================
-// CONSTRUCCIÓN DINÁMICA DE TARJETAS
-// ======================================================
+/**
+ * Construye cada cartilla utilizando la plantilla original exacta
+ */
 function createCardElement(media) {
   const clone = template.content.cloneNode(true);
   const card = clone.querySelector(".ig-card");
 
-  // 1. Asignar siempre la imagen "Antes"
+  // 1. Asignar imagen "Antes"
   const beforeImg = clone.querySelector(".before-media");
   beforeImg.src = media.before;
 
-  // 2. Resolver elemento "Después" (Video o Imagen)
+  // 2. Asignar capa "Después" (Video o Imagen)
   const afterClip = clone.querySelector(".after-clip");
   const videoEl = clone.querySelector(".after-video");
 
   if (isVideoUrl(media.after)) {
-    // Si es Video: observadores activos
     videoEl.dataset.src = media.after;
     preloadObserver.observe(videoEl);
     playbackObserver.observe(videoEl);
   } else {
-    // Si es Imagen (JPG, PNG, WEBP): remover video e inyectar <img> perfectamente alineado
     videoEl.remove();
-
     const imgEl = document.createElement("img");
     imgEl.className = "after-media";
     imgEl.src = media.after;
@@ -74,42 +73,36 @@ function createCardElement(media) {
     imgEl.loading = "lazy";
     imgEl.draggable = false;
     imgEl.style.cssText = "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none;";
-
     afterClip.appendChild(imgEl);
   }
 
-  // 3. Inicializar comparador
+  // 3. Inicializar comparador táctil / cursor
   setupComparator(card.querySelector("[data-comparison]"));
+
   return card;
 }
 
-// ======================================================
-// RENDERIZADO EN LOTES (2x3)
-// ======================================================
-function renderNextBatch() {
-  const nextItems = postsDatabase.slice(displayedCount, displayedCount + BATCH_SIZE);
-  nextItems.forEach((item) => cardsGrid.appendChild(createCardElement(item)));
-  displayedCount += nextItems.length;
-
-  if (displayedCount >= postsDatabase.length && loadMoreBtn) {
-    loadMoreBtn.classList.add("is-hidden");
-  }
-}
-
-// ======================================================
-// CONTROL DEL COMPARADOR (DESLIZADOR)
-// ======================================================
+/**
+ * Lógica del comparador interactivo
+ */
 function setupComparator(container) {
   if (!container) return;
 
   let resetTimer = null;
-  const updateSplit = (pct) => container.style.setProperty("--split", `${Math.max(0, Math.min(pct, 100))}%`);
+
+  const updateSplit = (pct) => {
+    const clamped = Math.max(0, Math.min(pct, 100));
+    container.style.setProperty("--split", `${clamped}%`);
+  };
 
   const onMove = (e) => {
     container.classList.remove("is-resetting");
     clearTimeout(resetTimer);
-    const { left, width } = container.getBoundingClientRect();
-    if (width > 0) updateSplit(((e.clientX - left) / width) * 100);
+    const rect = container.getBoundingClientRect();
+    if (rect.width > 0) {
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      updateSplit(((clientX - rect.left) / rect.width) * 100);
+    }
   };
 
   const onReset = () => {
@@ -121,27 +114,42 @@ function setupComparator(container) {
 
   container.addEventListener("pointerenter", onMove);
   container.addEventListener("pointermove", onMove);
-  ["pointerleave", "pointerup", "pointercancel"].forEach((evt) => container.addEventListener(evt, onReset));
+  ["pointerleave", "pointerup", "pointercancel"].forEach((evt) => {
+    container.addEventListener(evt, onReset);
+  });
 
   updateSplit(50);
 }
 
-// ======================================================
-// ARRANQUE
-// ======================================================
+/**
+ * Carga de datos desde Cloudflare R2
+ */
 document.addEventListener("DOMContentLoaded", async () => {
+  // Inicializar comparador 16:9 del Hero
   setupComparator(document.querySelector(".comparator-16-9"));
 
   try {
-    // Consulta directa a la API en vivo con parámetro de tiempo anti-caché
     const res = await fetch(`${API_POSTS_URL}?t=${Date.now()}`);
     if (res.ok) {
-      postsDatabase = await res.json();
+      const posts = await res.json();
+
+      if (Array.isArray(posts) && posts.length > 0) {
+        // Renderizamos estrictamente las primeras 6 publicaciones
+        const initialBatch = posts.slice(0, HOMEPAGE_LIMIT);
+        initialBatch.forEach(item => cardsGrid.appendChild(createCardElement(item)));
+
+        // Mostrar botón si hay más de 6 elementos
+        if (posts.length > HOMEPAGE_LIMIT && loadMoreBtn) {
+          loadMoreBtn.classList.remove("is-hidden");
+        } else if (loadMoreBtn) {
+          loadMoreBtn.classList.add("is-hidden");
+        }
+      } else if (loadMoreBtn) {
+        loadMoreBtn.classList.add("is-hidden");
+      }
     }
   } catch (err) {
     console.warn("No se pudo obtener el catálogo desde el Worker:", err);
+    if (loadMoreBtn) loadMoreBtn.classList.add("is-hidden");
   }
-
-  renderNextBatch();
-  loadMoreBtn?.addEventListener("click", renderNextBatch);
 });
