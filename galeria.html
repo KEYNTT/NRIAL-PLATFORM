@@ -77,44 +77,30 @@
   </main>
 
   <!-- =========================================
-       PIE DE PÁGINA CREATIVO Y EDITORIAL
+       PIE DE PÁGINA TOTALMENTE EN NEGRO (#000000)
+       (IDÉNTICO AL DE INDEX.HTML)
   ========================================== -->
   <footer class="footer-creative">
-    <div class="footer-giant-text" aria-hidden="true">
-      NRIAL PLATFORMS • VISUAL EXCELLENCE • ZERO MEDIOCRITY • 
-    </div>
-
     <div class="footer-container">
       <div class="footer-top">
+        <!-- Manifiesto -->
         <div class="footer-col brand-col">
           <div class="footer-brand">NRIAL PLATFORM<span class="brand-dot">.</span></div>
           <p class="footer-manifesto">
             Ayudamos a fundadores, creadores y marcas que entienden que en la era del scroll infinito, pasar desapercibido es el error más costoso.
           </p>
-          <div class="system-status">
-            <span class="status-indicator"></span>
-            <span class="status-text">Cloudflare R2 Bucket: Conectado</span>
-          </div>
         </div>
 
+        <!-- Enlaces -->
         <div class="footer-col">
           <h4 class="col-title">Explorar</h4>
           <ul class="col-links">
             <li><a href="index.html">Inicio</a></li>
             <li><a href="galeria.html">Catálogo Completo</a></li>
-            <li><a href="admin.html">Panel de Creador (Admin)</a></li>
           </ul>
         </div>
 
-        <div class="footer-col">
-          <h4 class="col-title">Formatos</h4>
-          <ul class="col-links">
-            <li><span>Short-Form Vertical (9:16)</span></li>
-            <li><span>Cortes Horizontales (16:9)</span></li>
-            <li><span>Diseño de Sonido Frecuencial</span></li>
-          </ul>
-        </div>
-
+        <!-- Disponibilidad -->
         <div class="footer-col">
           <h4 class="col-title">Disponibilidad</h4>
           <div class="studio-clock">
@@ -123,27 +109,33 @@
           <div class="social-pills">
             <a href="https://instagram.com" target="_blank" rel="noopener" class="social-pill">Instagram</a>
             <a href="https://tiktok.com" target="_blank" rel="noopener" class="social-pill">TikTok</a>
-            <a href="https://youtube.com" target="_blank" rel="noopener" class="social-pill">YouTube</a>
           </div>
         </div>
       </div>
 
+      <!-- Barra de copyright -->
       <div class="footer-bottom">
         <div class="copyright">
           © 2026 <strong>NRIAL Platforms Inc.</strong> Todos los derechos reservados.
         </div>
         <div class="signature">
-          Crafted with obsession for high retention & aesthetics.
+          Designs from NRIAL.
         </div>
       </div>
+    </div>
+
+    <!-- IMAGEN NRIAL DEBAJO DEL PIE DE PÁGINA (100% ANCHO) -->
+    <div class="footer-image-strip">
+      <img src="nrial.png" alt="NRIAL" class="nrial-bottom-img" />
     </div>
   </footer>
 
   <!-- =======================================================
-       PLANTILLA DE CARTILLA: 100% IDÉNTICA AL ORIGINAL
+       PLANTILLA DE CARTILLA: EXACTA AL ORIGINAL
   ======================================================== -->
   <template id="card-template">
     <article class="ig-card">
+      <!-- HEADER FIJO -->
       <header class="post-header">
         <div class="profile">
           <div class="story-ring">
@@ -159,6 +151,7 @@
         </div>
         <button class="more" type="button" aria-label="Más opciones">•••</button>
       </header>
+      <!-- COMPARADOR (SOLO CAMBIAN LAS RUTAS) -->
       <div class="comparison-wrap">
         <div class="comparison" data-comparison>
           <img class="before-media" alt="Antes" draggable="false" loading="lazy" />
@@ -173,6 +166,7 @@
           </div>
         </div>
       </div>
+      <!-- ACCIONES FIJAS -->
       <div class="post-actions">
         <div class="left-actions">
           <div class="action-item liked">
@@ -210,17 +204,20 @@
           </svg>
         </div>
       </div>
+      <!-- ENGAGEMENT FIJO -->
       <div class="engagement">
         <div class="mini-avatars" aria-hidden="true">
           <span>AB</span><span>LM</span><span>JR</span>
         </div>
         <strong>12,847 Me gusta</strong>
       </div>
+      <!-- DESCRIPCIÓN FIJA -->
       <div class="caption">
         <strong>nrial.platforms</strong>
         <span>Transformación visual real. Del estático al movimiento. 🔥</span>
         <div class="hashtags">#Visuales #AntesYDespues #Nrial</div>
       </div>
+      <!-- FOOTER FIJO -->
       <footer class="post-footer">
         <button class="comments-link" type="button">Ver los 186 comentarios</button>
         <span class="dot">•</span>
@@ -230,7 +227,7 @@
   </template>
 
   <!-- =========================================
-       CONTROLADOR JAVASCRIPT CORREGIDO
+       CONTROLADOR JAVASCRIPT CON ANIMACIÓN Y AUTOPLAY
   ========================================== -->
   <script>
     const API_POSTS_URL = "https://nrial-media-api.kevin-123-abanto.workers.dev/api/posts";
@@ -238,12 +235,11 @@
     const catalogCounter = document.getElementById("catalog-counter");
     const template = document.getElementById("card-template");
 
-    // Detección estricta de extensiones de video
     function isVideoUrl(url) {
       return /\.(webm|mp4|mov|ogg)(\?.*)?$/i.test(url);
     }
 
-    // 1. Observador de precarga: carga el src solo cuando se aproxima a pantalla
+    // 1. Observador de precarga
     const preloadObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(({ target: video, isIntersecting }) => {
         if (isIntersecting && !video.src && video.dataset.src) {
@@ -254,11 +250,10 @@
       });
     }, { rootMargin: "300px 0px" });
 
-    // 2. Observador de reproducción: asegura reproducción fluida en scroll
+    // 2. Observador de reproducción con muted forzado
     const playbackObserver = new IntersectionObserver((entries) => {
       entries.forEach(({ target: video, isIntersecting }) => {
         if (isIntersecting) {
-          // Forzar propiedades requeridas por el navegador
           video.muted = true;
           video.defaultMuted = true;
           video.play().catch(() => {});
@@ -268,7 +263,7 @@
       });
     }, { threshold: 0.4 });
 
-    // Control deslizante Antes / Después
+    // Control deslizante interactivo Antes / Después
     function setupComparator(container) {
       if (!container) return;
       let resetTimer = null;
@@ -295,7 +290,6 @@
         resetTimer = setTimeout(() => container.classList.remove("is-resetting"), 450);
       };
 
-      // Soporte táctil y de cursor
       container.addEventListener("pointerdown", onMove);
       container.addEventListener("pointerenter", onMove);
       container.addEventListener("pointermove", onMove);
@@ -306,12 +300,11 @@
       updateSplit(50);
     }
 
-    // Construcción de la cartilla
+    // Construcción de la tarjeta
     function buildCard(media) {
       const clone = template.content.cloneNode(true);
       const card = clone.querySelector(".ig-card");
 
-      // Asignar imagen Antes
       const beforeImg = clone.querySelector(".before-media");
       beforeImg.src = media.before;
 
@@ -319,7 +312,6 @@
       const videoEl = clone.querySelector(".after-video");
 
       if (isVideoUrl(media.after)) {
-        // Corrección crítica: asegurar 'muted' en la propiedad IDL de JS para permitir autoplay
         videoEl.muted = true;
         videoEl.defaultMuted = true;
         videoEl.playsInline = true;
@@ -330,7 +322,6 @@
         preloadObserver.observe(videoEl);
         playbackObserver.observe(videoEl);
       } else {
-        // En caso de ser imagen estática
         videoEl.remove();
         const imgEl = document.createElement("img");
         imgEl.className = "after-media";
@@ -357,7 +348,7 @@
           fullGrid.innerHTML = "";
           posts.forEach((media) => {
             const cardNode = buildCard(media);
-            fullGrid.appendChild(cardNode); // Montaje seguro en el DOM antes de reproducir
+            fullGrid.appendChild(cardNode);
           });
         }
       } catch (err) {
